@@ -2,87 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Logo Loop</title>
+  <title>Logo Loop with Dark/Light Mode</title>
   <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      transition: background 0.3s ease;
+      overflow: hidden;
+    }
+
+    body.light {
+      background: #fff;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #444;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s, color 0.3s;
+      z-index: 10;
+    }
+
+    body.light .theme-toggle {
+      background: #ddd;
+      color: #000;
+    }
+
     .logoloop {
       position: relative;
-      overflow: hidden;
-      --logoloop-gap: 40px;
-      --logoloop-logoHeight: 48px;
-      --logoloop-fadeColorAuto: #ffffff;
       width: 100%;
-      height: 200px;
+      max-width: 100%;
+      height: 120px;
+      overflow: hidden;
     }
 
     .logoloop__track {
       display: flex;
       width: max-content;
       will-change: transform;
-      user-select: none;
     }
 
     .logoloop__list {
       display: flex;
       align-items: center;
+      justify-content: center;
     }
 
     .logoloop__item {
       flex: 0 0 auto;
-      margin-right: var(--logoloop-gap);
-      font-size: var(--logoloop-logoHeight);
+      margin: 0 40px;
+      font-size: 48px;
       line-height: 1;
     }
 
     .logoloop__item img {
-      height: var(--logoloop-logoHeight);
+      height: 60px;
       width: auto;
       display: block;
-      object-fit: contain;
-      -webkit-user-drag: none;
-      pointer-events: none;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: brightness(0) invert(1); /* white logos on dark */
+      transition: transform 0.3s ease, filter 0.3s ease;
     }
 
-    .logoloop--scale-hover .logoloop__item:hover img {
+    body.light .logoloop__item img {
+      filter: brightness(0); /* black logos on light */
+    }
+
+    .logoloop__item img:hover {
       transform: scale(1.2);
-      transform-origin: center center;
-    }
-
-    .logoloop--fade::before,
-    .logoloop--fade::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: clamp(24px, 8%, 120px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .logoloop--fade::before {
-      left: 0;
-      background: linear-gradient(to right,
-          var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
-          rgba(0, 0, 0, 0) 100%);
-    }
-
-    .logoloop--fade::after {
-      right: 0;
-      background: linear-gradient(to left,
-          var(--logoloop-fadeColor, var(--logoloop-fadeColorAuto)) 0%,
-          rgba(0, 0, 0, 0) 100%);
     }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
 
-  <div class="logoloop logoloop--fade logoloop--scale-hover" id="logoLoop">
+  <div class="logoloop" id="logoLoop">
     <div class="logoloop__track" id="logoTrack">
       <ul class="logoloop__list" id="logoList">
-        <li class="logoloop__item"><a href="https://react.dev" target="_blank"><img src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React"></a></li>
-        <li class="logoloop__item"><a href="https://nextjs.org" target="_blank"><img src="https://cdn.worldvectorlogo.com/logos/next-js.svg" alt="Next.js"></a></li>
-        <li class="logoloop__item"><a href="https://www.typescriptlang.org" target="_blank"><img src="https://cdn.worldvectorlogo.com/logos/typescript.svg" alt="TypeScript"></a></li>
-        <li class="logoloop__item"><a href="https://tailwindcss.com" target="_blank"><img src="https://cdn.worldvectorlogo.com/logos/tailwind-css-2.svg" alt="Tailwind CSS"></a></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/react-2.svg" alt="React"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/next-js.svg" alt="Next.js"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/typescript.svg" alt="TypeScript"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/tailwind-css-2.svg" alt="Tailwind CSS"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/javascript-1.svg" alt="JavaScript"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/html-1.svg" alt="HTML5"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/css-3.svg" alt="CSS3"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg" alt="Node.js"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg" alt="MongoDB"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/postgresql.svg" alt="PostgreSQL"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/git-icon.svg" alt="Git"></li>
+        <li class="logoloop__item"><img src="https://cdn.worldvectorlogo.com/logos/github-icon-1.svg" alt="GitHub"></li>
       </ul>
     </div>
   </div>
@@ -91,12 +109,13 @@
     const track = document.getElementById("logoTrack");
     const list = document.getElementById("logoList");
     const container = document.getElementById("logoLoop");
+    const toggleBtn = document.getElementById("themeToggle");
 
-    // Duplicate logos to create infinite loop
+    // Duplicate logos for seamless infinite scroll
     track.appendChild(list.cloneNode(true));
 
     let offset = 0;
-    let speed = 120; // px per second
+    let speed = 100; // px per second
     let isHovered = false;
 
     container.addEventListener("mouseenter", () => isHovered = true);
@@ -115,11 +134,15 @@
         }
         track.style.transform = `translate3d(${offset}px, 0, 0)`;
       }
-
       requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
-  </script>
 
+    // Theme toggle
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      toggleBtn.textContent = document.body.classList.contains("light") ? "☀️ Light" : "🌙 Dark";
+    });
+  </script>
 </body>
 </html>
